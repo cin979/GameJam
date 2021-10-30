@@ -1,0 +1,18 @@
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  playerSprite = createSprite(windowWidth/2, windowHeight/2);
+  playerSprite.draw = function() {
+    stroke("ORANGE");
+    strokeWeight(5);
+    noFill();
+    ellipse(0, 0, 20, 20);
+  }
+}
+
+function draw() {
+  background("GREY");
+
+  drawSprites();
+
+
+};
