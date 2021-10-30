@@ -10,6 +10,6 @@ function setup() {
 }
 
 function draw() {
-  background("BLACK");
+  background("BROWN");
   drawSprites();
 };
