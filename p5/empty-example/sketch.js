@@ -2,7 +2,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   playerSprite = createSprite(windowWidth/2, windowHeight/2);
   playerSprite.draw = function() {
-    stroke("BLUE");
+    stroke("BLACK");
     strokeWeight(5);
     noFill();
     ellipse(0, 0, 20, 20);
@@ -10,6 +10,6 @@ function setup() {
 }
 
 function draw() {
-  background("ORANGE");
+  background("YELLOW");
   drawSprites();
 };
