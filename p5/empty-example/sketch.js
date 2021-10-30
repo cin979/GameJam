@@ -11,8 +11,5 @@ function setup() {
 
 function draw() {
   background("BLUE");
-
   drawSprites();
-
-
 };
