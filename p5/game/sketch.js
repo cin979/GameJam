@@ -12,7 +12,7 @@ let crashSound;
 let mode;
 let timer = 5;
 
-const W = 1440; const H = 700;
+// const W = windowWidth; const H = windowHeight;
 
 function preload() {
     track1 = loadStrings("track/track1.txt");
@@ -24,52 +24,62 @@ function preload() {
     carImg = loadImage("images/main.png");  
     accident = new Group(); //if car = grass
     normal = new Group();
-    level = new Group()
+    level = new Group();
 }
 
 //MAP TILES
 let level1; 
 function setup() {
-    createCanvas(W,H);
+    createCanvas(windowWidth,windowHeight);
 
     mode = 0;
 
     level1 = new Array(track1.length);
-    for (i = 0; i < track1.length && track1[i] != ""; i++) {
+    for (i = 0; i < track1.length && track1[i][0] != ""; i++) {
         level1[i] = track1[i].split(""); //split token for txt values
     }
-    console.log(level1[0].length)
     for(y = 0; y < level1.length; y++) { //tile's y in accordance to txt file
         for(x = 0; x < level1[y].length; x++) {
             makeSprites(value = level1[y][x],x,y);
         }
     }
 
-    car = createSprite(carX,carY);
+    car = createSprite(30+carX,30+carY);
     car.rotation = 270;
     car.addImage(carImg);
     car.scale = carScale;
+    console.log(allSprites.length)
+
 }
 
 //CREATE SPRITES 
 function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
-    sprite = createSprite(x*50,y*50, 50, 50);
-    sprite.debug = true
+    sprite = createSprite(30+x*50,30+y*50, 50, 50);
     if(value == 0){ //value based on txt
+        // sprite.scale = (0.80);
+        grass.resize(sprite.width, sprite.height);
         sprite.addImage(grass);
         sprite.addToGroup(accident)
-        sprite.setCollider("circle",0,0,5,5);
-        sprite.scale = (0.80)
+        // sprite.setCollider("rectangle",0,0,5,5);
     }
     if(value == 1){
+        road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
         sprite.addToGroup(normal);
     }
     if(value == 2){
+        // sprite.scale = (0.80)
+        key.resize(sprite.width, sprite.height);
         sprite.addImage(key);
         sprite.addToGroup(level);
-        sprite.setCollider("circle",0,0,5,5);
-        sprite.scale = (0.80)
+        // sprite.setCollider("rectangle",0,0,5,5);
+    }
+    if(value == 3){
+        road.resize(sprite.width, sprite.height);
+        sprite.addImage(road);
+        sprite.addToGroup(normal);
+        carX = x*50; 
+        carY = y*50; 
     }
 }
 
@@ -91,8 +101,7 @@ function level2Track(){
 
 //CAR VARS:
 let carScale = 0.4
-let carX = W/2; //car initial x W/2 
-let carY = 625; //car initial y 625
+
 let SPEED = 0; //initial speed
 
 function carDrive() {
@@ -102,30 +111,32 @@ function carDrive() {
         SPEED+=0.1;
         car.maxSPEED = 1;
     }
-    else if(keyIsDown(DOWN_ARROW)) {
+    if(keyIsDown(DOWN_ARROW)) {
         SPEED -=0.1;
-        if(SPEED = 0) {
+        if(SPEED != 0) {
             SPEED = 0;
         }
     }
-    else if(keyIsDown(LEFT_ARROW)) {
-        car.rotation-=1;
+    if(keyIsDown(LEFT_ARROW)) {
+        car.rotation-=2;
 
     }
-    else if(keyIsDown(RIGHT_ARROW)) {
-        car.rotation+=1;
+    if(keyIsDown(RIGHT_ARROW)) {
+        car.rotation+=2;
     }
 
     if(car.collide(accident)) {
+        car.rotation = 270;
         SPEED = 0;
-        car.position.x = carX;
-        car.position.y = carY;
+        car.position.x = 30+carX;
+        car.position.y = 30+carY;
     }
 
     if(car.collide(level)) {
         car.rotation = 270;
+        SPEED = 0;
+        allSprites.removeSprites();
         level2Track();
-
     }
 }
 
