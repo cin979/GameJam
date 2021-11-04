@@ -86,7 +86,7 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
 let level2;
 function level2Track(){
     level2 = new Array(track2.length);
-    for (i = 0; i < track2.length; i++) {
+    for (i = 0; i < track2.length && track2[i][0] != ""; i++) {
         level2[i] = track2[i].split(""); //split token for txt values
     }
     for(y = 0; y < level2.length; y++) { //tile's y in accordance to txt file
