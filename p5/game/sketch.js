@@ -1,6 +1,7 @@
 //GLOBAL VARS
 let track1;
 let track2;
+let track3;
 let grass;
 let road;
 let key;
@@ -17,6 +18,7 @@ let timer = 5;
 function preload() {
     track1 = loadStrings("track/track1.txt");
     track2 = loadStrings("track/track2.txt");
+    track3 = loadStrings("track/track3.txt");
 
     grass = loadImage("images/rock.png");
     road = loadImage("images/path.png");
@@ -24,7 +26,8 @@ function preload() {
     carImg = loadImage("images/main.png");  
     accident = new Group(); //if car = grass
     normal = new Group();
-    level = new Group();
+    difficult2 = new Group(); //for level 2
+    difficult3 = new Group(); // for level 3
 }
 
 //MAP TILES
@@ -34,6 +37,7 @@ function setup() {
 
     mode = 0;
 
+    // Make level1 first
     level1 = new Array(track1.length);
     for (i = 0; i < track1.length && track1[i][0] != ""; i++) {
         level1[i] = track1[i].split(""); //split token for txt values
@@ -48,43 +52,49 @@ function setup() {
     car.rotation = 270;
     car.addImage(carImg);
     car.scale = carScale;
-    console.log(allSprites.length)
-
 }
 
 //CREATE SPRITES 
 function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
     sprite = createSprite(30+x*50,30+y*50, 50, 50);
-    if(value == 0){ //value based on txt
+    if(value == 0){ // grass
         // sprite.scale = (0.80);
         grass.resize(sprite.width, sprite.height);
         sprite.addImage(grass);
         sprite.addToGroup(accident)
         // sprite.setCollider("rectangle",0,0,5,5);
     }
-    if(value == 1){
+    if(value == 1){ // road
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
         sprite.addToGroup(normal);
     }
-    if(value == 2){
+    if(value == 2){ // level 1 -> 2 key
         // sprite.scale = (0.80)
         key.resize(sprite.width, sprite.height);
         sprite.addImage(key);
-        sprite.addToGroup(level);
+        sprite.addToGroup(difficult2);
         // sprite.setCollider("rectangle",0,0,5,5);
     }
-    if(value == 3){
+    if(value == 3){ // start base
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
         sprite.addToGroup(normal);
         carX = x*50; 
         carY = y*50; 
     }
+    if(value == 4){ // level 2 -> 3 key
+        // sprite.scale = (0.80)
+        key.resize(sprite.width, sprite.height);
+        sprite.addImage(key);
+        sprite.addToGroup(difficult3);
+        // sprite.setCollider("rectangle",0,0,5,5);
+    }
 }
 
 let level2;
 function level2Track(){
+    // create level 2 track
     level2 = new Array(track2.length);
     for (i = 0; i < track2.length && track2[i][0] != ""; i++) {
         level2[i] = track2[i].split(""); //split token for txt values
@@ -97,6 +107,24 @@ function level2Track(){
     car = createSprite(carX,carY);
     car.addImage(carImg);
     car.scale = carScale;
+}
+
+let level3;
+function level3Track(){
+    // create level 3 track
+    level3 = new Array(track3.length);
+    for (i = 0; i < track3.length && track3[i][0] != ""; i++) {
+        level3[i] = track3[i].split(""); //split token for txt values
+    }
+    for(y = 0; y < level3.length; y++) { //tile's y in accordance to txt file
+        for(x = 0; x < level3[y].length; x++) {
+            makeSprites(value = level3[y][x],x,y);
+        }
+    }
+    car = createSprite(carX,carY);
+    car.addImage(carImg);
+    car.scale = carScale;
+
 }
 
 //CAR VARS:
@@ -125,6 +153,7 @@ function carDrive() {
         car.rotation+=2;
     }
 
+    // collide with grass
     if(car.collide(accident)) {
         car.rotation = 270;
         SPEED = 0;
@@ -132,12 +161,22 @@ function carDrive() {
         car.position.y = 30+carY;
     }
 
-    if(car.collide(level)) {
+    // collide with level 2 key in level 1
+    if(car.collide(difficult2)) {
         car.rotation = 270;
         SPEED = 0;
         allSprites.removeSprites();
         level2Track();
     }
+
+    // collide with level 3 key in level 2
+    if(car.collide(difficult3)) {
+        car.rotation = 270;
+        SPEED = 0;
+        allSprites.removeSprites();
+        level3Track();
+    }
+    
 }
 
 function instruction() {
