@@ -10,10 +10,7 @@ function setup() {
 }
 
 function draw() {
-<<<<<<< HEAD
   background("PINK");
-=======
-  background("YELLOW");
->>>>>>> 88ca40ec9f933e9cc6f68658b3a9aed33320f5b5
+
   drawSprites();
 };
