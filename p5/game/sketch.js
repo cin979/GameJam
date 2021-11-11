@@ -4,13 +4,57 @@ let activeLevel;
 let grass;
 let road;
 let key;
-let playerSprite;
 let stage;
+let player;
 let crashSound;
 let mode;
 let timer = 5;
 let gravity = 2;
 let levelCnt = 3;
+
+class Player {
+    constructor(){
+        this.maxHp=100
+        this.currentHp=100
+        this.sprite = createSprite(30+startX,30+startY);
+        this.sprite.collide(stage);
+        this.sprite.rotation = 270;
+        this.sprite.addImage(playerImg);
+        this.sprite.scale = 0.3;
+        // this.sprite.maxSpeed = 100;
+        this.sprite.friction = 0.5;
+    }
+
+    playerMove(){
+        this.sprite.collide(stage);
+        if(keyIsDown(UP_ARROW) && player.sprite.touching.bottom) {
+            player.sprite.velocity.y -= 75;
+        }
+        if(keyIsDown(DOWN_ARROW)) {
+            player.sprite.velocity.y += gravity*2;
+        }
+        if(keyIsDown(RIGHT_ARROW)) {
+            player.sprite.velocity.x += 5;
+        }
+        if(keyIsDown(LEFT_ARROW)) {
+            player.sprite.velocity.x -= 5;
+        }
+        if(player.sprite.touching.bottom === false){
+            // Clamber Function
+            // if((player.sprite.touching.left || player.sprite.touching.right) && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW))){
+                // player.sprite.position.y -= 1;
+            // } else {
+                player.sprite.velocity.y+=gravity;
+            // }
+        } 
+    }
+    // hurt(){//lower their hp somehow
+
+    // }
+    // attack(){
+
+    // }
+}
 
 function preload() {
     while(levels.length < levelCnt){
@@ -22,7 +66,7 @@ function preload() {
     key = loadImage("images/key.png");
     playerImg = loadImage("images/main.png");  
 
-    stage = new Group(); //if playerSprite = grass
+    stage = new Group();
     stage_background = new Group();
 }
 
@@ -35,13 +79,8 @@ function setup() {
 
     // Make level1 first
     loadLVL(0)
+    player = new Player();
 
-    playerSprite = createSprite(30+startX,30+startY);
-    playerSprite.rotation = 270;
-    playerSprite.addImage(playerImg);
-    playerSprite.scale = 0.4;
-    // playerSprite.maxSpeed = 100;
-    playerSprite.friction = 0.5;
 }
 
 function loadLVL(lvl_ID){
@@ -58,61 +97,54 @@ function loadLVL(lvl_ID){
 
 //CREATE SPRITES 
 function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
-    sprite = createSprite(30+x*50,30+y*50, 50, 50);
     if(value == 0){ // walls
+        sprite = createSprite(30+x*50,30+y*50, 50, 50);
         grass.resize(sprite.width, sprite.height);
         sprite.addImage(grass);
         sprite.addToGroup(stage);
     }
-    if(value == 1){ // road
+    if(value == 1){ // background
+        sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
         sprite.addToGroup(stage_background);
     }
-    if(value == 2){ // level 1 -> 2 key
+    if(value == 2){ // level change
+        sprite = createSprite(30+x*50,30+y*50, 50, 50);
         key.resize(sprite.width, sprite.height);
         sprite.addImage(key);
         sprite.addToGroup(stage);
     }
-    if(value == 3){ // start base
+    if(value == 3){ // spawn point
+        sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
         sprite.addToGroup(stage_background);
         startX = x*50; 
         startY = y*50; 
     }
-}
-
-function playerMove() {
-    playerSprite.collide(stage);
-
-    if(keyIsDown(UP_ARROW) && playerSprite.touching.bottom) {
-        playerSprite.velocity.y -= 50;
+    if(value == 4){ // Platform
+        sprite = createSprite(30+x*50,40+y*50, 50, 30);
+        road.resize(50, 50);
+        sprite.draw = function(){
+            image(road, 0, -10, 50, 50)
+            fill("BROWN")
+            rect(0,0,50,30);
+        }
+        sprite.addToGroup(stage)
     }
-    if(keyIsDown(DOWN_ARROW)) {
-        playerSprite.velocity.y += gravity*2;
-    }
-    if(keyIsDown(RIGHT_ARROW)) {
-        playerSprite.velocity.x += 5;
-    }
-    if(keyIsDown(LEFT_ARROW)) {
-        playerSprite.velocity.x -= 5;
-    }
-    if(playerSprite.touching.bottom === false){
-        playerSprite.velocity.y+=gravity;
-    } 
 }
 
 function instruction() {
     stroke("black");
     textSize(25);
-    text("To move playerSprite: Up, Left, Right Arrow Keys. To stop playerSprite: Down Arrow Key",0,600);
-    text("Tip: When finished turning playerSprite, press Down Arrow Key to stop",50,650)
+    text("To move player.sprite: Up, Left, Right Arrow Keys. To stop player.sprite: Down Arrow Key",0,600);
+    text("Tip: When finished turning player.sprite, press Down Arrow Key to stop",50,650)
 }
 
 function draw() {
     clear();
-    playerMove();
+    player.playerMove();
     drawSprites();
 }
 
