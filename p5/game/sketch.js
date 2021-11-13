@@ -84,10 +84,10 @@ function preload() {
 
     levelTable = loadJSON("p5/game/levels/levelTable.JSON", table_func);
 
-    grass = loadImage("/p5/game/images/rock.png");
-    road = loadImage("/p5/game/images/path.png");
-    keyImg = loadImage("/p5/game/images/key.png");
-    playerImg = loadImage("/p5/game/images/main.png");  
+    grass = loadImage("p5/game/images/rock.png");
+    road = loadImage("p5/game/images/path.png");
+    keyImg = loadImage("p5/game/images/key.png");
+    playerImg = loadImage("p5/game/images/main.png");  
 
     keys = new Group();
     stage_background = new Group();
@@ -97,7 +97,7 @@ function preload() {
 function table_func() {
     let temp;
     for(i = 0; i < levelTable["file_names"].length; i++) {
-        temp = loadStrings("/p5/game/levels/" + levelTable["file_names"][i], level_proc);
+        temp = loadStrings("p5/game/levels/" + levelTable["file_names"][i], level_proc);
     }
 }
 
