@@ -3,7 +3,9 @@ let levels = [];
 let activeLevel;
 let grass;
 let road;
-let keys;
+let keyImg;
+let key_obj;
+let stage_background;
 let stage;
 let player;
 let crashSound;
@@ -19,10 +21,7 @@ class Player {
         this.currentHp=100
         this.sprite = createSprite(30+startX,30+startY, 40, 40);
         playerImg.resize(this.sprite.width, this.sprite.height);
-        this.sprite.collide(stage);
-        this.sprite.collide(keys, stage_swap);
         this.sprite.rotation = 270;
-
         this.sprite.addImage(playerImg);
         // this.sprite.maxSpeed = 100;
         this.sprite.friction = 0.5;
@@ -68,8 +67,8 @@ class Level_Gate {
     constructor(value){
         // Will finish entry later
         this.sprite = createSprite(30+x*50,30+y*50, 50, 50);
-        key.resize(sprite.width, sprite.height); 
-        this.sprite.addImage(key);
+        keyImg.resize(sprite.width, sprite.height); 
+        this.sprite.addImage(keyImg);
         for (i = 0; i < levels.length; i++){
             if (levels[i]["id"] === value) {
                 this.lvl_index = i;
@@ -77,12 +76,8 @@ class Level_Gate {
                 console.log("invalid level link");
             }
         }
-
+        this.sprite.debug = true;
     }
-}
-
-function stage_swap() {
-    
 }
 
 function preload() {
@@ -91,12 +86,12 @@ function preload() {
 
     grass = loadImage("images/rock.png");
     road = loadImage("images/path.png");
-    key = loadImage("images/key.png");
+    keyImg = loadImage("images/key.png");
     playerImg = loadImage("images/main.png");  
 
-    stage = new Group();
-    stage_background = new Group();
     keys = new Group();
+    stage_background = new Group();
+    stage = new Group();
 }
 
 function table_func() {
@@ -121,7 +116,7 @@ function setup() {
     mode = 0;
 
     // Make level1 first
-    loadLVL("L3");
+    loadLVL("L1");
     player = new Player();
 
 }
@@ -164,8 +159,8 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
     }
     if(value == "2"){ // level change
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
-        key.resize(sprite.width, sprite.height);
-        sprite.addImage(key);
+        keyImg.resize(sprite.width, sprite.height);
+        sprite.addImage(keyImg);
         sprite.immovable = true;
         sprite.addToGroup(stage);
     }
@@ -189,7 +184,7 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
         sprite.addToGroup(stage);
     }
     if(value.length > 1 && value[0] == "L"){
-        // Level_Gate(value);
+        key_obj = new Level_Gate(value);
     }
 
 }
@@ -197,6 +192,12 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
 function draw() {
     clear();
     player.playerMove();
+    player.sprite.collide(stage);
+    if(player.sprite.overlap(key_obj.sprite)){
+        allSprites.removeSprites();
+        loadLVL(levels[key_obj.lvl_index]["id"]);
+        player = new Player();
+    }
     drawSprites();
 }
 
