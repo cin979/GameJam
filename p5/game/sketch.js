@@ -23,7 +23,6 @@ class Player {
         playerImg.resize(this.sprite.width, this.sprite.height);
         this.sprite.rotation = 270;
         this.sprite.addImage(playerImg);
-        // this.sprite.maxSpeed = 100;
         this.sprite.friction = 0.5;
     }
     
@@ -47,25 +46,12 @@ class Player {
             } else {
                 player.sprite.velocity.y+= gravity/8;
             }
-            // Clamber Function
-            // if((player.sprite.touching.left || player.sprite.touching.right) && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW))){
-                // player.sprite.position.y -= 1;
-            // } else {
-                // player.sprite.velocity.y+=gravity;
-            // }
         } 
     }
-    // hurt(){//lower their hp somehow
-
-    // }
-    // attack(){
-
-    // }
 }
 
 class Level_Gate {
     constructor(value){
-        // Will finish entry later
         this.sprite = createSprite(30+x*50,30+y*50, 50, 50);
         keyImg.resize(sprite.width, sprite.height); 
         this.sprite.addImage(keyImg);
@@ -76,7 +62,6 @@ class Level_Gate {
                 console.log("invalid level link");
             }
         }
-        this.sprite.debug = true;
     }
 }
 
@@ -177,7 +162,6 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(50, 50);
         sprite.draw = function(){
-            // image(road, 0, -10, 50, 50)
             fill("BROWN")
             rect(0,0,50,50);
         }
