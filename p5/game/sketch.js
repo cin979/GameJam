@@ -25,11 +25,11 @@ class Player {
         // this.sprite.maxSpeed = 100;
         this.sprite.friction = 0.5;
     }
-
+    
     playerMove(){
         this.sprite.collide(stage);
         if(keyIsDown(UP_ARROW) && player.sprite.touching.bottom) {
-            player.sprite.velocity.y -= 75;
+            player.sprite.velocity.y -= 95;
         }
         if(keyIsDown(DOWN_ARROW)) {
             player.sprite.velocity.y += gravity*2;
@@ -158,14 +158,14 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
         startY = y*50; 
     }
     if(value == "4"){ // Platform
-        sprite = createSprite(30+x*50,40+y*50, 50, 30);
+        sprite = createSprite(30+x*50,40+y*50, 50, 50);
         road.resize(50, 50);
         sprite.draw = function(){
             image(road, 0, -10, 50, 50)
             fill("BROWN")
             rect(0,0,50,30);
         }
-        sprite.addToGroup(stage)
+        sprite.addToGroup(stage);
     }
     if(value.length > 1 && value[0] == "L"){
 
