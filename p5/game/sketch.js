@@ -9,7 +9,7 @@ let player;
 let crashSound;
 let mode;
 let timer = 5;
-let gravity = 4;
+let gravity = 2;
 let levelCnt = 3;
 let levelTable;
 
@@ -122,7 +122,7 @@ function setup() {
 
     // Make level1 first
     console.log()
-    loadLVL("L1");
+    loadLVL("L3");
     player = new Player();
 
 }
@@ -192,16 +192,9 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
         sprite.addToGroup(stage);
     }
     if(value.length > 1 && value[0] == "L"){
-        Level_Gate(value);
+        // Level_Gate(value);
     }
 
-}
-
-function instruction() {
-    stroke("black");
-    textSize(25);
-    text("To move player.sprite: Up, Left, Right Arrow Keys. To stop player.sprite: Down Arrow Key",0,600);
-    text("Tip: When finished turning player.sprite, press Down Arrow Key to stop",50,650)
 }
 
 function draw() {
