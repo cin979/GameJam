@@ -82,7 +82,7 @@ class Level_Gate {
 
 function preload() {
 
-    levelTable = loadJSON("levels/levelTable.JSON", table_func);
+    levelTable = loadJSON("p5/game/levels/levelTable.JSON", table_func);
 
     grass = loadImage("/p5/game/images/rock.png");
     road = loadImage("/p5/game/images/path.png");
