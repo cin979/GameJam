@@ -3,13 +3,13 @@ let levels = [];
 let activeLevel;
 let grass;
 let road;
-let key;
+let keys;
 let stage;
 let player;
 let crashSound;
 let mode;
 let timer = 5;
-let gravity = 2;
+let gravity = 4;
 let levelCnt = 3;
 let levelTable;
 
@@ -17,11 +17,13 @@ class Player {
     constructor(){
         this.maxHp=100
         this.currentHp=100
-        this.sprite = createSprite(30+startX,30+startY);
+        this.sprite = createSprite(30+startX,30+startY, 40, 40);
+        playerImg.resize(this.sprite.width, this.sprite.height);
         this.sprite.collide(stage);
+        this.sprite.collide(keys, stage_swap);
         this.sprite.rotation = 270;
+
         this.sprite.addImage(playerImg);
-        this.sprite.scale = 0.3;
         // this.sprite.maxSpeed = 100;
         this.sprite.friction = 0.5;
     }
@@ -29,23 +31,28 @@ class Player {
     playerMove(){
         this.sprite.collide(stage);
         if(keyIsDown(UP_ARROW) && player.sprite.touching.bottom) {
-            player.sprite.velocity.y -= 95;
+            player.sprite.velocity.y -= 75;
         }
         if(keyIsDown(DOWN_ARROW)) {
             player.sprite.velocity.y += gravity*2;
         }
         if(keyIsDown(RIGHT_ARROW)) {
-            player.sprite.velocity.x += 5;
+            player.sprite.velocity.x += 10;
         }
         if(keyIsDown(LEFT_ARROW)) {
-            player.sprite.velocity.x -= 5;
+            player.sprite.velocity.x -= 10;
         }
         if(player.sprite.touching.bottom === false){
+            if (player.sprite.velocity.y > 0) {
+                player.sprite.velocity.y+= gravity*4;
+            } else {
+                player.sprite.velocity.y+= gravity/8;
+            }
             // Clamber Function
             // if((player.sprite.touching.left || player.sprite.touching.right) && (keyIsDown(RIGHT_ARROW) || keyIsDown(LEFT_ARROW))){
                 // player.sprite.position.y -= 1;
             // } else {
-                player.sprite.velocity.y+=gravity;
+                // player.sprite.velocity.y+=gravity;
             // }
         } 
     }
@@ -58,12 +65,24 @@ class Player {
 }
 
 class Level_Gate {
-    constructor(level_ID){
+    constructor(value){
         // Will finish entry later
-        sprite = createSprite(30+x*50,30+y*50, 50, 50);
+        this.sprite = createSprite(30+x*50,30+y*50, 50, 50);
         key.resize(sprite.width, sprite.height); 
-        sprite.addImage(key);
+        this.sprite.addImage(key);
+        for (i = 0; i < levels.length; i++){
+            if (levels[i]["id"] === value) {
+                this.lvl_index = i;
+            } else if (i >= levels.length) {
+                console.log("invalid level link");
+            }
+        }
+
     }
+}
+
+function stage_swap() {
+    
 }
 
 function preload() {
@@ -77,6 +96,7 @@ function preload() {
 
     stage = new Group();
     stage_background = new Group();
+    keys = new Group();
 }
 
 function table_func() {
@@ -135,42 +155,44 @@ function makeSprites(value,x,y) { //makeSprite params: value,x,y from for loop
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
         grass.resize(sprite.width, sprite.height);
         sprite.addImage(grass);
+        sprite.immovable = true;
         sprite.addToGroup(stage);
     }
     if(value == "1"){ // background
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
+        sprite.immovable = true;
         sprite.addToGroup(stage_background);
     }
     if(value == "2"){ // level change
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
         key.resize(sprite.width, sprite.height);
         sprite.addImage(key);
+        sprite.immovable = true;
         sprite.addToGroup(stage);
     }
     if(value == "3"){ // spawn point
         sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(sprite.width, sprite.height);
         sprite.addImage(road);
+        sprite.immovable = true;
         sprite.addToGroup(stage_background);
         startX = x*50; 
         startY = y*50; 
     }
     if(value == "4"){ // Platform
-        sprite = createSprite(30+x*50,40+y*50, 50, 50);
+        sprite = createSprite(30+x*50,30+y*50, 50, 50);
         road.resize(50, 50);
         sprite.draw = function(){
-            image(road, 0, -10, 50, 50)
+            // image(road, 0, -10, 50, 50)
             fill("BROWN")
-            rect(0,0,50,30);
+            rect(0,0,50,50);
         }
         sprite.addToGroup(stage);
     }
     if(value.length > 1 && value[0] == "L"){
-
-
-
+        Level_Gate(value);
     }
 
 }
