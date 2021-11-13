@@ -121,7 +121,6 @@ function setup() {
     mode = 0;
 
     // Make level1 first
-    console.log()
     loadLVL("L3");
     player = new Player();
 
@@ -137,11 +136,9 @@ function loadLVL(lvl_ID){
             console.log("invalid level link");
         }
     }
-    console.log(levels[lvl_index])
     for (i = 0; i < levels[lvl_index]["level_dat"].length && levels[lvl_index]["level_dat"][i][0] != ""; i++) {
         level.push(levels[lvl_index]["level_dat"][i].split(" ")); //split token for txt values
     }
-    console.log(level)
     for(y = 0; y < level.length; y++) { //tile's y in accordance to txt file
         for(x = 0; x < level[y].length; x++) {
             makeSprites(value = level[y][x],x,y);
